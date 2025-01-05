@@ -38,8 +38,8 @@ services:
       timeout: 10s
       retries: 10
     volumes:
-      - ./db/pg_data:/var/lib/postgresql/data
-      - ./db/pg_dataset:/docker-entrypoint-initdb.d
+      - ./config/db/pg_data:/var/lib/postgresql/data
+      - ./config/db/pg_dataset:/docker-entrypoint-initdb.d
     networks:
       - net
 

@@ -23,3 +23,6 @@ build
 
 # Ignore .env files (optional, if you don't want them in the image)
 .env
+
+# Ignore config/db directory (optional, if you don't want them in the image)
+config/db
