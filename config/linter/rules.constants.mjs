@@ -3,7 +3,7 @@
  * @constant
  * @example
  *    // eslint.config.mjs
- *    import { eslintBaseRules } from './src/config/lint/index.mjs';
+ *    import { eslintBaseRules } from './config/linter/index.mjs';
  *
  *    export default {
  *        ...
@@ -42,7 +42,7 @@ const eslintBaseRules = {
  * @constant
  * @example
  *     // eslint.config.mjs
- *    import { eslintImportOrderRules } from './src/config/lint/index.mjs';
+ *    import { eslintImportOrderRules } from './config/linter/index.mjs';
  *
  *    export default {
  *        ...
@@ -88,7 +88,7 @@ const eslintImportOrderRules = {
  * @constant
  * @example
  *     // eslint.config.mjs
- *    import { eslintNodeRules } from './src/config/lint/index.mjs';
+ *    import { eslintNodeRules } from './config/linter/index.mjs';
  *
  *    export default {
  *        ...
@@ -122,7 +122,7 @@ const eslintNodeRules = {
  * @constant
  * @example
  *     // eslint.config.mjs
- *    import { typescriptEslintRules } from './src/config/lint/index.mjs';
+ *    import { typescriptEslintRules } from './config/linter/index.mjs';
  *
  *    export default {
  *        ...
