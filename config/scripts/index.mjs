@@ -1,61 +1,91 @@
-import fs from 'node:fs';
-import readline from 'node:readline';
-import { exec } from 'node:child_process';
+import fs from 'node:fs'
+import readline from 'node:readline'
+import { exec } from 'node:child_process'
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
-});
+})
 
-const askQuestion = (query, currentValue) => new Promise(resolve => {
-  rl.question(`${query} (current: ${currentValue}): `, (answer) => {
-    resolve(answer.trim() === '' ? currentValue : answer);
-  });
-});
+const askQuestion = (query, currentValue) =>
+  new Promise(resolve => {
+    rl.question(`${query} (current: ${currentValue}): `, answer => {
+      resolve(answer.trim() === '' ? currentValue : answer)
+    })
+  })
 
-const askYesNoQuestion = (query) => new Promise(resolve => {
-  rl.question(`${query} (y/n): `, (answer) => {
-    resolve(answer.trim().toLowerCase() === 'y');
-  });
-});
+const askYesNoQuestion = query =>
+  new Promise(resolve => {
+    rl.question(`${query} (y/n): `, answer => {
+      resolve(answer.trim().toLowerCase() === 'y')
+    })
+  })
+
+const getGitAuthor = () =>
+  new Promise((resolve, reject) => {
+    exec('git config --get user.name', (error, stdout, stderr) => {
+      if (error) {
+        reject(error)
+        return
+      }
+      const name = stdout.trim()
+      exec('git config --get user.email', (error, stdout, stderr) => {
+        if (error) {
+          reject(error)
+          return
+        }
+        const email = stdout.trim()
+        resolve(`${name} <${email}>`)
+      })
+    })
+  })
 
 const updatePackageJson = async () => {
   try {
-    const packageJsonPath = './package.json';
-    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    const packageJsonPath = './package.json'
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
 
-    const name = await askQuestion('Enter project name', packageJson.name);
-    const description = await askQuestion('Enter project description', packageJson.description);
-    const version = await askQuestion('Enter project version', packageJson.version);
-    const author = await askQuestion('Enter project author', packageJson.author);
+    const gitAuthor = await getGitAuthor()
+    const name = await askQuestion('Enter project name', packageJson.name)
+    const description = await askQuestion(
+      'Enter project description',
+      packageJson.description
+    )
+    const version = await askQuestion(
+      'Enter project version',
+      packageJson.version
+    )
+    const author = await askQuestion('Enter project author', gitAuthor)
 
-    packageJson.name = name;
-    packageJson.description = description;
-    packageJson.version = version;
-    packageJson.author = author;
+    packageJson.name = name
+    packageJson.description = description
+    packageJson.version = version
+    packageJson.author = author
 
-    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-    console.log('package.json updated successfully!');
+    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2))
+    console.log('package.json updated successfully!')
 
-    const installDependencies = await askYesNoQuestion('Do you want to install dependencies now?');
+    const installDependencies = await askYesNoQuestion(
+      'Do you want to install dependencies now?'
+    )
     if (installDependencies) {
       exec('pnpm install', (error, stdout, stderr) => {
         if (error) {
-          console.error(`Error installing dependencies: ${error.message}`);
-          return;
+          console.error(`Error installing dependencies: ${error.message}`)
+          return
         }
         if (stderr) {
-          console.error(`stderr: ${stderr}`);
-          return;
+          console.error(`stderr: ${stderr}`)
+          return
         }
-        console.log(`stdout: ${stdout}`);
-      });
+        console.log(`stdout: ${stdout}`)
+      })
     }
   } catch (error) {
-    console.error('Error updating package.json:', error);
+    console.error('Error updating package.json:', error)
   } finally {
-    rl.close();
+    rl.close()
   }
-};
+}
 
-updatePackageJson();
+updatePackageJson()

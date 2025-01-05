@@ -1,8 +1,8 @@
 {
-  "name": "user-service",
+  "name": "api",
   "version": "0.0.1",
-  "description": "User service",
-  "author": "Igor Escalona <igorer88@gmail.com>",
+  "description": "Api",
+  "author": "",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
