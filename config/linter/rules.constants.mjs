@@ -3,7 +3,7 @@
  * @constant
  * @example
  *    // eslint.config.mjs
- *    import { eslintBaseRules } from './config/linter/index.mjs';
+ *    import { eslintBaseRules } from './src/config/lint/index.mjs';
  *
  *    export default {
  *        ...
@@ -42,7 +42,7 @@ const eslintBaseRules = {
  * @constant
  * @example
  *     // eslint.config.mjs
- *    import { eslintImportOrderRules } from './config/linter/index.mjs';
+ *    import { eslintImportOrderRules } from './src/config/lint/index.mjs';
  *
  *    export default {
  *        ...
@@ -67,18 +67,22 @@ const eslintImportOrderRules = {
       ],
       pathGroups: [
         {
-          pattern: '@/**',
-          group: 'internal',
+          pattern: 'node:*',
+          group: 'builtin',
           position: 'before'
         },
         {
-          pattern: '@',
+          pattern: '@/**',
           group: 'internal',
           position: 'before'
         }
       ],
-      pathGroupsExcludedImportTypes: ['builtin'],
-      'newlines-between': 'always'
+      pathGroupsExcludedImportTypes: [],
+      'newlines-between': 'always',
+      alphabetize: {
+        order: 'asc',
+        caseInsensitive: true
+      }
     }
   ]
 }
@@ -88,7 +92,7 @@ const eslintImportOrderRules = {
  * @constant
  * @example
  *     // eslint.config.mjs
- *    import { eslintNodeRules } from './config/linter/index.mjs';
+ *    import { eslintNodeRules } from './src/config/lint/index.mjs';
  *
  *    export default {
  *        ...
@@ -122,7 +126,7 @@ const eslintNodeRules = {
  * @constant
  * @example
  *     // eslint.config.mjs
- *    import { typescriptEslintRules } from './config/linter/index.mjs';
+ *    import { typescriptEslintRules } from './src/config/lint/index.mjs';
  *
  *    export default {
  *        ...
@@ -136,11 +140,18 @@ const eslintNodeRules = {
  */
 const typescriptEslintRules = {
   '@typescript-eslint/ban-ts-comment': 'off',
-  '@typescript-eslint/explicit-function-return-type': 'off',
-  '@typescript-eslint/explicit-module-boundary-types': 'off',
-  '@typescript-eslint/interface-name-prefix': 'off',
-  '@typescript-eslint/no-explicit-any': 'off',
-  '@typescript-eslint/no-var-requires': 'off',
+  '@typescript-eslint/explicit-function-return-type': 'warn',
+  '@typescript-eslint/explicit-module-boundary-types': 'warn',
+  '@typescript-eslint/naming-convention': [
+    'error',
+    {
+      selector: 'interface',
+      format: ['PascalCase'],
+      custom: { regex: '^I[A-Z]', match: false }
+    }
+  ],
+  '@typescript-eslint/no-explicit-any': 'error',
+  '@typescript-eslint/no-var-requires': 'error',
   '@typescript-eslint/no-unused-vars': [
     'error',
     {

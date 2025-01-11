@@ -13,7 +13,7 @@ import {
   eslintImportOrderRules,
   eslintNodeRules,
   typescriptEslintRules
-} from './src/config/lint/index.mjs'
+} from './config/linter/index.mjs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
