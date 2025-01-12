@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "template:init": "node ./config/scripts/index.mjs",
+    "script:init": "node ./config/scripts/index.mjs",
     "build": "nest build",
     "start": "nest start",
     "start:dev": "nest start --watch",
