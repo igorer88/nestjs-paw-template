@@ -2,16 +2,18 @@ import { Module, Scope } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { APP_INTERCEPTOR } from '@nestjs/core'
 
-import { apiConfig, getValidationSchema } from './config'
+import { apiConfig, dbConfig, getValidationSchema } from './config'
 import { LoggingInterceptor } from './config/interceptors'
+import { DatabaseModule } from './database/database.module'
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       validationSchema: getValidationSchema(),
-      load: [apiConfig],
+      load: [apiConfig, dbConfig],
       isGlobal: true
-    })
+    }),
+    DatabaseModule
   ],
   providers: [
     {
