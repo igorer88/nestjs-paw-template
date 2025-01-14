@@ -1,9 +1,9 @@
 services:
-  user-service:
+  api:
     restart: unless-stopped
-    container_name: user-service
+    container_name: api
     # image: ghcr.io/your-username/your-repo:your-tag  # Image from GitHub Container Registry
-    image: user-service:latest
+    image: api:latest
     build:
       context: .
       dockerfile: Dockerfile
@@ -26,10 +26,10 @@ services:
     container_name: postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: r00t
-      POSTGRES_DB: postgres
-      POSTGRES_PORT: 5432
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_PORT: ${DB_PORT}
     ports:
       - ${POSTGRES_PORT:-5432}:5432
     healthcheck:
