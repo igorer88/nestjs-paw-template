@@ -1,91 +1,82 @@
 import fs from 'node:fs'
-import readline from 'node:readline'
-import { exec } from 'node:child_process'
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-})
+import {
+  askQuestion,
+  askYesNoQuestion,
+  installDependencies,
+  getGitAuthor,
+  isPackageManagerInstalled,
+  rl
+} from './utils.mjs'
+import { updatePackageJson, updateDockerCompose } from './updatePackage.mjs'
 
-const askQuestion = (query, currentValue) =>
-  new Promise(resolve => {
-    rl.question(`${query} (current: ${currentValue}): `, answer => {
-      resolve(answer.trim() === '' ? currentValue : answer)
-    })
-  })
-
-const askYesNoQuestion = query =>
-  new Promise(resolve => {
-    rl.question(`${query} (y/n): `, answer => {
-      resolve(answer.trim().toLowerCase() === 'y')
-    })
-  })
-
-const getGitAuthor = () =>
-  new Promise((resolve, reject) => {
-    exec('git config --get user.name', (error, stdout, stderr) => {
-      if (error) {
-        reject(error)
-        return
-      }
-      const name = stdout.trim()
-      exec('git config --get user.email', (error, stdout, stderr) => {
-        if (error) {
-          reject(error)
-          return
-        }
-        const email = stdout.trim()
-        resolve(`${name} <${email}>`)
-      })
-    })
-  })
-
-const updatePackageJson = async () => {
+/**
+ * Main function to prompt the user for package details and update the package.json file and docker compose file.
+ */
+const main = async () => {
   try {
-    const packageJsonPath = './package.json'
-    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
-
     const gitAuthor = await getGitAuthor()
-    const name = await askQuestion('Enter project name', packageJson.name)
-    const description = await askQuestion(
-      'Enter project description',
-      packageJson.description
-    )
-    const version = await askQuestion(
-      'Enter project version',
-      packageJson.version
-    )
+    const name = await askQuestion('Enter project name', '')
+    const description = await askQuestion('Enter project description', '')
+    const version = await askQuestion('Enter project version', '1.0.0')
     const author = await askQuestion('Enter project author', gitAuthor)
 
-    packageJson.name = name
-    packageJson.description = description
-    packageJson.version = version
-    packageJson.author = author
+    await updatePackageJson({ name, description, version, author })
+    const dockerComposePath = await askQuestion(
+      'Enter docker-compose file path',
+      './docker-compose.yml'
+    )
 
-    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2))
-    console.log('package.json updated successfully!')
+    if (!fs.existsSync(dockerComposePath)) {
+      console.error(`Error: ${dockerComposePath} does not exist.`)
+      return
+    }
 
-    const installDependencies = await askYesNoQuestion(
+    const dockerImageVersion = await askQuestion(
+      'Enter Docker image version',
+      'latest'
+    )
+    updateDockerCompose(name, dockerComposePath, dockerImageVersion)
+
+    const shouldInstallDependencies = await askYesNoQuestion(
       'Do you want to install dependencies now?'
     )
-    if (installDependencies) {
-      exec('pnpm install', (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Error installing dependencies: ${error.message}`)
-          return
-        }
-        if (stderr) {
-          console.error(`stderr: ${stderr}`)
-          return
-        }
-        console.log(`stdout: ${stdout}`)
-      })
+    if (shouldInstallDependencies) {
+      const packageManager = await askQuestion(
+        'Enter package manager (pnpm/npm/yarn)',
+        'pnpm (Recommended)'
+      )
+      const isInstalled = await isPackageManagerInstalled(packageManager)
+      if (!isInstalled) {
+        console.error(`Error: ${packageManager} is not installed.`)
+        return
+      }
+
+      const registryUrl = await askQuestion(
+        'Enter registry URL',
+        'https://registry.npmjs.org/'
+      )
+      if (packageManager !== 'pnpm') {
+        updateDockerCompose(
+          name,
+          dockerComposePath,
+          dockerImageVersion,
+          packageManager,
+          registryUrl
+        )
+      }
+
+      await installDependencies(packageManager)
+      console.log(
+        `\nTo run the NestJS project, use: ${packageManager} run start:dev or ${packageManager} start:dev `
+      )
     }
+    console.log('\nReady to go!\nHappy Coding! 🚀')
   } catch (error) {
-    console.error('Error updating package.json:', error)
+    console.error('Error:', error)
   } finally {
     rl.close()
   }
 }
 
-updatePackageJson()
+main()
