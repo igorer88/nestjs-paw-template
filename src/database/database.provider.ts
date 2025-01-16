@@ -23,6 +23,7 @@ export const databaseProviders: DynamicModule[] = [
         database: configService.get('db.database'),
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         migrations: [__dirname + '/migrations/*{.ts,.js}'],
+        uuidExtension: 'pgcrypto',
         synchronize: isProduction ? false : true,
         autoLoadEntities: true
       } as ConnectOptions
