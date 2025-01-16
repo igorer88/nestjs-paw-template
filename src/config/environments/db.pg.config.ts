@@ -1,6 +1,6 @@
 import { registerAs } from '@nestjs/config'
 
-export const dbConfig = registerAs('db', () => ({
+export const dbPgConfig = registerAs('db.pg', () => ({
   driver: process.env.DB_DRIVER,
   host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT),

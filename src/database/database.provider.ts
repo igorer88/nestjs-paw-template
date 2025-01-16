@@ -15,12 +15,12 @@ export const databaseProviders: DynamicModule[] = [
 
       return {
         ssl: isProduction,
-        type: configService.get('db.driver'),
-        host: configService.get('db.host'),
-        port: configService.get('db.port'),
-        username: configService.get('db.username'),
-        password: configService.get('db.password'),
-        database: configService.get('db.database'),
+        type: configService.get('db.pg.driver'),
+        host: configService.get('db.pg.host'),
+        port: configService.get('db.pg.port'),
+        username: configService.get('db.pg.username'),
+        password: configService.get('db.pg.password'),
+        database: configService.get('db.pg.database'),
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         migrations: [__dirname + '/migrations/*{.ts,.js}'],
         uuidExtension: 'pgcrypto',
