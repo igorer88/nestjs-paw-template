@@ -1,2 +1,2 @@
 export * from './environments'
-export * from './enum'
+export * from './enums'
