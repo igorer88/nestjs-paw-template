@@ -1,12 +1,10 @@
 import { readFileSync } from 'fs'
 
 import {
-  ClassSerializerInterceptor,
   INestApplication,
   ValidationPipe,
   VersioningType
 } from '@nestjs/common'
-import { Reflector } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import helmet from 'helmet'
 
@@ -29,12 +27,6 @@ export const getAppMetadata = (
 }
 
 export function setup(app: INestApplication): INestApplication {
-  app.useGlobalInterceptors(
-    new ClassSerializerInterceptor(app.get(Reflector), {
-      strategy: 'excludeAll'
-    })
-  )
-
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
