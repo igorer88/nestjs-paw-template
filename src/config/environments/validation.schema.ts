@@ -15,5 +15,5 @@ export const getValidationSchema = (): Joi.ObjectSchema => {
     DB_PASSWORD: Joi.string().required(),
     DB_NAME: Joi.string().required(),
     DB_PORT: Joi.string().required()
-  })
+  }).unknown(true)
 }
