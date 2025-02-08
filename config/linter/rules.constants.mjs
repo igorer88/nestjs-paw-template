@@ -153,7 +153,7 @@ const typescriptEslintRules = {
   '@typescript-eslint/no-explicit-any': 'error',
   '@typescript-eslint/no-var-requires': 'error',
   '@typescript-eslint/no-unused-vars': [
-    'error',
+    'warn',
     {
       vars: 'all',
       args: 'all'
