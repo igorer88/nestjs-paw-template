@@ -6,7 +6,8 @@
   "private": true,
   "license": "MIT",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.x",
+    "pnpm": ">=10.x"
   },
   "keywords": [
     "typescript",
