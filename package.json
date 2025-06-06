@@ -1,13 +1,18 @@
 {
-  "name": "api",
+  "name": "nestjs-base-template",
   "version": "0.0.1",
-  "description": "Api",
-  "author": "",
+  "description": "NestJs base template with TypeORM, PostgreSQL, SQLite, Swagger, E2E tests, and more.",
+  "author": "Igor Escalona",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "engines": {
     "node": ">=20.0.0"
   },
+  "keywords": [
+    "typescript",
+    "nestjs",
+    "template"
+  ],
   "scripts": {
     "script:init": "node ./config/scripts/index.mjs",
     "build": "nest build",
