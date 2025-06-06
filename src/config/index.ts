@@ -1,4 +1,4 @@
 export * from './enums'
-export * from './environments'
+export * from './environment'
 export * from './health-check'
 export * from './logger'
