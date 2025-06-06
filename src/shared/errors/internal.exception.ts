@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common'
 
 import { BaseError } from './base.error'
-import { ErrorTypes } from '../enums/error-types.enum'
+import { ErrorTypes } from './enums'
 
 /**
  * Represents an internal exception with detailed logging capabilities.
