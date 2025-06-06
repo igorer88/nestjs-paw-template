@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common'
 
-import { FormattedError } from './error.interface'
 import { ClientException } from './client.exception'
+import { FormattedError } from './error.interface'
 import { InternalException } from './internal.exception'
 
 @Injectable()

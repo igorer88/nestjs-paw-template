@@ -1,4 +1,4 @@
-import { ErrorTypes } from '../enums'
+import { ErrorTypes } from './enums'
 
 /**
  * Abstract base class for custom errors with detailed logging capabilities.

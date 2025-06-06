@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Logger } from '@nestjs/common'
 
 import { BaseError } from './base.error'
-import { ErrorTypes } from '../enums/error-types.enum'
+import { ErrorTypes } from './enums'
 
 /**
  * Represents a client exception with detailed logging capabilities.
