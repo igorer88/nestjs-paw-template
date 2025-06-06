@@ -6,13 +6,18 @@ import { HealthCheckService } from './health-check.service'
 export class HealthCheckController {
   constructor(private readonly healthCheckService: HealthCheckService) {}
 
+  @Get('')
+  async checkAppStatus(): Promise<{ status: string }> {
+    return { status: 'Ok' }
+  }
+
   @Get('db')
-  async checkDatabaseConnection(): Promise<string> {
+  async checkDatabaseConnection(): Promise<{ status: string }> {
     const isConnected = await this.healthCheckService.isDatabaseConnected()
     if (!isConnected) {
-      return 'Database is not connected'
+      return { status: 'Database is not connected' }
     }
 
-    return 'Database is connected'
+    return { status: 'Database is connected' }
   }
 }
