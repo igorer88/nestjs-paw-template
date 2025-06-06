@@ -10,7 +10,8 @@ import { SharedModule } from './shared/shared.module'
     ConfigModule.forRoot({
       validationSchema: getValidationSchema(),
       load: [apiConfig, dbConfig],
-      isGlobal: true
+      isGlobal: true,
+      cache: true
     }),
     SharedModule,
     DatabaseModule
