@@ -14,7 +14,11 @@ export class DatabaseModule implements OnModuleInit {
 
   onModuleInit(): void {
     const dbDriver = this.configService.get('db.driver')
+    let message =
+      dbDriver === 'sqlite'
+        ? `Database driver: ${dbDriver} with file ${this.configService.get('db.sqlite.database')}`
+        : `Database driver: ${dbDriver}`
 
-    this.logger.log(`Database driver: ${dbDriver}`)
+    this.logger.log(message)
   }
 }
