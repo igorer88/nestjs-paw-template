@@ -41,7 +41,7 @@ const customTypescriptConfig = {
     parser: tsParser,
     parserOptions: {
       project: 'tsconfig.json',
-      tsconfigRootDir: '.'
+      tsconfigRootDir: __dirname
     }
   },
   settings: {
@@ -77,7 +77,7 @@ const recommendedTypeScriptConfigs = [
       parser: tsParser,
       parserOptions: {
         project: 'tsconfig.json',
-        tsconfigRootDir: '.'
+        tsconfigRootDir: __dirname
       }
     },
     rules: {
