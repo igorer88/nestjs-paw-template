@@ -20,3 +20,6 @@ export const dbConfig = registerAs('db', () => ({
     password: process.env.DB_PASSWORD
   }
 }))
+
+/** Folder to store the SQLite database file. */
+export const dbFolder = 'config/db'

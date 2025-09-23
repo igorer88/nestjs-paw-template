@@ -1,6 +1,7 @@
 import Joi from 'joi'
 
 import { Environment } from '../enums'
+import { dbFolder } from './db.config'
 
 export const getValidationSchema = (): Joi.ObjectSchema => {
   return Joi.object({
@@ -15,7 +16,7 @@ export const getValidationSchema = (): Joi.ObjectSchema => {
       .valid('postgres', 'sqlite', 'mysql', 'mssql'),
     DB_SQLITE_PATH: Joi.string().when('DB_DRIVER', {
       is: 'sqlite',
-      then: Joi.string().default('db.sqlite3'),
+      then: Joi.string().default(`${dbFolder}/db.sqlite3`),
       otherwise: Joi.optional()
     }),
     DB_HOST: Joi.string().when('DB_DRIVER', {
