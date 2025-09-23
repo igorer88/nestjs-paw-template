@@ -58,7 +58,7 @@ export const updateDockerCompose = (
   try {
     const dockerCompose = yaml.load(fs.readFileSync(dockerComposePath, 'utf8'))
     const dockerImgVersion = `${serviceName}:${dockerImageVersion}`
-
+    console.log(`Updating docker-compose.yml for service: ${serviceName} with image: ${dockerImgVersion}`)
     dockerCompose.services[serviceName].container_name = serviceName
     dockerCompose.services[serviceName].image = dockerImgVersion
 
