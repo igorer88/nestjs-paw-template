@@ -1,3 +1,5 @@
+minimumReleaseAge: 1440 # 24 hours
+
 onlyBuiltDependencies:
   - '@swc/core'
   - sqlite3
