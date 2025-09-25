@@ -59,6 +59,9 @@ importers:
       typeorm:
         specifier: ^0.3.26
         version: 0.3.26(pg@8.16.3)(reflect-metadata@0.2.2)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@24.3.0)(typescript@5.9.2))
+      yaml:
+        specifier: ^2.8.1
+        version: 2.8.1
     devDependencies:
       '@eslint/compat':
         specifier: ^1.3.2
@@ -123,9 +126,6 @@ importers:
       jest:
         specifier: ^30.1.1
         version: 30.1.1(@types/node@24.3.0)(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@24.3.0)(typescript@5.9.2))
-      js-yaml:
-        specifier: ^4.1.0
-        version: 4.1.0
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -4503,6 +4503,11 @@ packages:
 
   yallist@4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
+
+  yaml@2.8.1:
+    resolution: {integrity: sha512-lcYcMxX2PO9XMGvAJkJ3OsNMw+/7FKes7/hgerGUYWIoWu5j/+YQqcZr5JnPZWzOsEBgMbSbiSTn/dv/69Mkpw==}
+    engines: {node: '>= 14.6'}
+    hasBin: true
 
   yargs-parser@21.1.1:
     resolution: {integrity: sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw==}
@@ -9556,6 +9561,8 @@ snapshots:
   yallist@3.1.1: {}
 
   yallist@4.0.0: {}
+
+  yaml@2.8.1: {}
 
   yargs-parser@21.1.1: {}
 

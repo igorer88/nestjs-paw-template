@@ -1,6 +1,5 @@
 import fs from 'node:fs'
-import yaml from 'js-yaml'
-import { rl } from './utils.mjs'
+import yaml from 'yaml'
 
 /**
  * Updates the package.json file with provided values.
@@ -21,20 +20,17 @@ export const updatePackageJson = async ({
   try {
     const packageJsonPath = './package.json'
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
-
-    packageJson.name = name
-    packageJson.description = description
-    packageJson.version = version
-    packageJson.author = author
-
-    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2))
-    console.log('package.json updated successfully!')
-
-    updateDockerCompose(name)
+    packageJson.name = name || packageJson.name
+    packageJson.description = description || packageJson.description
+    packageJson.version = version || packageJson.version
+    packageJson.author = author || packageJson.author
+    fs.writeFileSync(
+      packageJsonPath,
+      JSON.stringify(packageJson, null, 2) + '\n'
+    )
+    console.log('Updated package.json successfully!\n')
   } catch (error) {
-    console.error('Error updating package.json:', error)
-  } finally {
-    rl.close()
+    console.error(`Error updating package.json: ${error.message}`)
   }
 }
 
@@ -43,6 +39,7 @@ export const updatePackageJson = async ({
  * Optionally changes the PNPM_REGISTRY to the specified package manager registry.
  *
  * @param {string} serviceName - The name of the service to update.
+ * @param {string} name - The project name.
  * @param {string} [dockerComposePath='./docker-compose.yml'] - The path to the docker-compose.yml file.
  * @param {string} [dockerImageVersion='latest'] - The version of the Docker image.
  * @param {string} [packageManager='pnpm'] - The package manager to use for the registry.
@@ -50,27 +47,51 @@ export const updatePackageJson = async ({
  */
 export const updateDockerCompose = (
   serviceName,
+  name,
   dockerComposePath = './docker-compose.yml',
   dockerImageVersion = 'latest',
   packageManager = 'pnpm',
   registryUrl = 'https://registry.npmjs.org/'
 ) => {
   try {
-    const dockerCompose = yaml.load(fs.readFileSync(dockerComposePath, 'utf8'))
-    const dockerImgVersion = `${serviceName}:${dockerImageVersion}`
-    console.log(`Updating docker-compose.yml for service: ${serviceName} with image: ${dockerImgVersion}`)
-    dockerCompose.services[serviceName].container_name = serviceName
-    dockerCompose.services[serviceName].image = dockerImgVersion
+    const fileContents = fs.readFileSync(dockerComposePath, 'utf8')
+    const composeFile = yaml.parseDocument(fileContents)
 
-    if (packageManager !== 'pnpm') {
-      dockerCompose.services[serviceName].build.args[
-        `${packageManager}_REGISTRY`
-      ] = registryUrl
+    const services = composeFile.get('services')
+    if (services && services.has('api')) {
+      const service = services.get('api')
+      const dockerImgVersion = `${name}:${dockerImageVersion}`
+      console.log(
+        `Updating docker-compose.yml for service: ${serviceName} with image: ${dockerImgVersion}`
+      )
+      service.set('container_name', name)
+      service.set('image', dockerImgVersion)
+      services.delete('api')
+      services.set(serviceName, service)
+
+      if (service?.has('build') && service.get('build').has('args')) {
+        const args = service.getIn(['build', 'args'])
+        const registryArg = `${packageManager.toUpperCase()}_REGISTRY`
+        // Clean up old registry args
+        args.delete('NPM_REGISTRY')
+        args.delete('YARN_REGISTRY')
+        args.delete('PNPM_REGISTRY')
+        // Set the correct one
+        args.set(registryArg, registryUrl)
+      }
     }
 
-    fs.writeFileSync(dockerComposePath, yaml.dump(dockerCompose))
-    console.log('docker-compose.yml updated successfully!')
+    // Clean up empty top-level keys
+    if (composeFile.has('volumes') && composeFile.get('volumes')?.items.length === 0) {
+      composeFile.delete('volumes')
+    }
+    if (composeFile.has('networks') && composeFile.get('networks')?.items.length === 0) {
+      composeFile.delete('networks')
+    }
+
+    fs.writeFileSync(dockerComposePath, composeFile.toString())
+    console.log('Updated docker-compose.yml successfully!')
   } catch (error) {
-    console.error('Error updating docker-compose.yml:', error)
+    console.error(`Error updating ${dockerComposePath}: ${error.message}`)
   }
 }

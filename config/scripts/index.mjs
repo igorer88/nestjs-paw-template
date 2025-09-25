@@ -14,6 +14,7 @@ import { updatePackageJson, updateDockerCompose } from './updatePackage.mjs'
  * Main function to prompt the user for package details and update the package.json file and docker compose file.
  */
 const main = async () => {
+  let packageManager = 'pnpm'
   try {
     const gitAuthor = await getGitAuthor()
     const name = await askQuestion('Enter project name', '')
@@ -32,17 +33,20 @@ const main = async () => {
       return
     }
 
+    const serviceName = await askQuestion('Enter Docker service name', 'api')
     const dockerImageVersion = await askQuestion(
       'Enter Docker image version',
       'latest'
     )
-    updateDockerCompose(name, dockerComposePath, dockerImageVersion)
 
     const shouldInstallDependencies = await askYesNoQuestion(
       'Do you want to install dependencies now?'
     )
+
+    let registryUrl = 'https://registry.npmjs.org/'
+
     if (shouldInstallDependencies) {
-      const packageManager = await askQuestion(
+      packageManager = await askQuestion(
         'Enter package manager (pnpm/npm/yarn)',
         'pnpm (Recommended)'
       )
@@ -52,20 +56,19 @@ const main = async () => {
         return
       }
 
-      const registryUrl = await askQuestion(
-        'Enter registry URL',
-        'https://registry.npmjs.org/'
-      )
-      if (packageManager !== 'pnpm') {
-        updateDockerCompose(
-          name,
-          dockerComposePath,
-          dockerImageVersion,
-          packageManager,
-          registryUrl
-        )
-      }
+      registryUrl = await askQuestion('Enter registry URL', registryUrl)
+    }
 
+    updateDockerCompose(
+      serviceName,
+      name,
+      dockerComposePath,
+      dockerImageVersion,
+      packageManager,
+      registryUrl
+    )
+
+    if (shouldInstallDependencies) {
       await installDependencies(packageManager)
       console.log(
         `\nTo run the NestJS project, use: ${packageManager} run start:dev or ${packageManager} start:dev `

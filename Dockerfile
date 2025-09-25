@@ -2,6 +2,8 @@
 
 # Define build arguments for Node.js version, pnpm registry, system user, and group ID
 ARG NODE_VERSION=lts-alpine
+ARG NPM_REGISTRY=https://registry.npmjs.org/
+ARG YARN_REGISTRY=https://registry.npmjs.org/
 ARG PNPM_REGISTRY=https://registry.npmjs.org/
 
 # Base stage with platform specification and Node.js version argument
@@ -9,10 +11,10 @@ FROM --platform=$TARGETPLATFORM node:${NODE_VERSION} AS base
 
 # Set environment variables
 ENV API_PORT=3000 \
-    SYSTEM_USER=system \
-    SYSTEM_GROUP=system \
-    SYSTEM_UID=2000 \
-    SYSTEM_GID=2000
+  SYSTEM_USER=system \
+  SYSTEM_GROUP=system \
+  SYSTEM_UID=2000 \
+  SYSTEM_GID=2000
 
 # Install Corepack and enable it
 RUN corepack enable
@@ -25,6 +27,12 @@ WORKDIR /app
 
 # Copy package.json and pnpm-lock.yaml
 COPY package.json pnpm-lock.yaml ./
+
+# Set the appropriate registry for pnpm
+RUN if [ -n "$NPM_REGISTRY" ]; then pnpm config set registry "$NPM_REGISTRY"; \
+  elif [ -n "$YARN_REGISTRY" ]; then pnpm config set registry "$YARN_REGISTRY"; \
+  else pnpm config set registry "$PNPM_REGISTRY"; \
+  fi
 
 # Fetch dependencies to cache them
 RUN pnpm fetch
