@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-base-template",
+  "name": "nestjs-paw-template",
   "version": "0.0.1",
   "description": "NestJs base template with TypeORM, PostgreSQL, SQLite, Swagger, E2E tests, and more.",
   "author": "Igor Escalona",
