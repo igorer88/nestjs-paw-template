@@ -78,15 +78,6 @@ DB_PASSWORD=your-password
 $ pnpm run migration:run
 ```
 
-## Database Constraint Handling
-
-When adding entities with unique constraints (e.g., email, username, phone), implement constraint error handling:
-
-1. Define constraint names in `src/shared/errors/enums/database-errors.enum.ts`
-2. Add handling logic in `src/shared/errors/database-errors.service.ts`
-
-Example constraints: `UQ_EMAIL_ADDRESS`, `UQ_USERNAME`, `UQ_PHONE_NUMBER`
-
 ## Docker
 
 Run the project with PostgreSQL using Docker:
@@ -117,6 +108,127 @@ $ pnpm run start:prod
 ## API Documentation
 
 Swagger documentation is available at `http://localhost:3000/docs` when the application is running.
+
+## Error Handling
+
+This template includes a centralized error handling system for consistent API responses.
+
+### Architecture
+
+```
+Exception → AllExceptionsFilter → ErrorService → ClientException → Response
+                                    ↓
+                              [External Monitoring Tools]
+```
+
+### Key Components
+
+| Component             | File                                    | Purpose                      |
+| --------------------- | --------------------------------------- | ---------------------------- |
+| `AllExceptionsFilter` | `src/shared/errors/exception.filter.ts` | Global exception catcher     |
+| `ErrorService`        | `src/shared/errors/error.service.ts`    | Formats and processes errors |
+| `ClientException`     | `src/shared/errors/client.exception.ts` | Custom exception class       |
+| `BaseError`           | `src/shared/errors/base.error.ts`       | Error interface              |
+
+### Error Response Format
+
+```json
+{
+  "path": "/api/v1/users",
+  "statusCode": 400,
+  "message": "Validation failed",
+  "details": "...",
+  "timestamp": "2026-03-17T12:00:00.000Z"
+}
+```
+
+### Security
+
+- **Stack traces**: Never exposed to clients (development logs only)
+- **Production**: Clean error messages without internal details
+- **Development**: Full error details for debugging
+- **IP Address Handling**: Configurable via `IP_LOG_LEVEL` environment variable
+  - `enabled`: Full IP logged
+  - `anonymized`: Masked (e.g., `192.168.x.x`) - default
+  - `disabled`: IP not logged
+
+### Adding Custom Errors
+
+Use `ClientException` for service-level errors:
+
+```typescript
+throw new ClientException(
+  'Error message',
+  'Detailed info',
+  HttpStatus.BAD_REQUEST,
+  'ERROR_CODE',
+  { context: '...' }
+)
+```
+
+### Internal Errors (Experimental)
+
+> ⚠️ **Experimental**: This feature is subject to change.
+
+Internal errors are meant for business logic errors that occur within the API but should not be exposed to clients. This is especially useful for microservices where service-to-service communication differs from the public HTTP API.
+
+**Use case**: Integration with external services that may fail, but the API should return a clean response to the client.
+
+```typescript
+throw new InternalException(
+  'External service unavailable',
+  'EXTERNAL_SERVICE_ERROR',
+  originalException,
+  stackTrace,
+  { service: 'payment-gateway' }
+)
+```
+
+**Behavior**:
+
+- **Internal**: Logs full error for debugging
+- **Client response**: Translated to appropriate HTTP status
+- **Stack traces**: Preserved for monitoring tools, never sent to client
+
+### Database Constraint Handling
+
+When adding entities with unique constraints (e.g., email, username, phone), implement constraint error handling:
+
+1. Define constraint names in `src/shared/errors/enums/database-errors.enum.ts`
+2. Add handling logic in `src/shared/errors/database-errors.service.ts`
+
+Example constraints: `UQ_EMAIL_ADDRESS`, `UQ_USERNAME`, `UQ_PHONE_NUMBER`
+
+### External Monitoring Integration
+
+The exception filter provides a clean integration point for external monitoring tools like Sentry, Datadog, or New Relic:
+
+```typescript
+// src/shared/errors/exception.filter.ts
+async catch(exception: unknown, host: ArgumentsHost): Promise<void> {
+  const clientException = await this.errorService.handleException(exception)
+
+  /**
+   * Capture exception with full context for monitoring tools
+   * monitor.captureException(exception, { extra: { ... } })
+   */
+
+  // configurable IP logging (enabled, masked, disabled)
+  clientException.logError(request.ip)
+
+  const errorResponse: ErrorResponse = {
+    path: request.url,
+    statusCode: clientException.getStatus(),
+    message: clientException.message || 'Internal server error',
+    details: clientException.details || '',
+    timestamp: new Date().toISOString()
+  }
+
+  response.status(clientException.getStatus()).json(errorResponse)
+}
+```
+
+Stack traces are automatically captured by monitoring tools while clients receive clean responses.
 
 ## Linting and Formatting
 
