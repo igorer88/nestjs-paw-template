@@ -12,13 +12,20 @@ export class ErrorService {
     const errorResponse = exceptionResponse.valueOf() as Record<string, string>
 
     const formattedError: FormattedError = {
-      message: errorResponse.error,
-      details: (exceptionResponse as ClientException).message || error.message,
+      message: (exceptionResponse as ClientException).message || error.message,
+      details: errorResponse.error,
       status: status,
       errorCode: 'HTTP_EXCEPTION',
       exception: error,
       stack: error.stack,
-      response: exceptionResponse
+      response: exceptionResponse,
+      context: { cause: error.cause }
+    }
+
+    const errorMessage: unknown = errorResponse['message']
+    if (errorMessage instanceof Array) {
+      formattedError.message = errorResponse.error
+      formattedError.details = errorMessage
     }
 
     return formattedError
@@ -51,14 +58,12 @@ export class ErrorService {
       formattedError = this.formatInternalException(exception)
     } else {
       formattedError = {
-        message:
-          (exception as ClientException).message || 'Unexpected error occurred',
-        details: (exception as ClientException).details || '',
+        message: (exception as ClientException).message,
+        details: (exception as ClientException).details,
         status: 500,
         errorCode: 'UNKNOWN_ERROR',
         exception: exception,
-        stack: (exception as ClientException).stack || '',
-        context: {}
+        stack: (exception as ClientException).stack
       }
     }
 

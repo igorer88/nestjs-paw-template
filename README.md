@@ -46,6 +46,14 @@ $ pnpm run test:e2e
 $ pnpm run test:cov
 ```
 
+## Database Constraint Handling
+
+When adding entities with unique constraints (e.g., email, username, phone), implement constraint error handling:
+
+1. Define constraint names in `src/shared/errors/enums/database-errors.enum.ts`
+2. Add handling logic in `src/shared/errors/database-errors.service.ts`
+
+Example constraints: `UQ_EMAIL_ADDRESS`, `UQ_USERNAME`, `UQ_PHONE_NUMBER`
 
 ## License
 
