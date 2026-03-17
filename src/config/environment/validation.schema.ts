@@ -15,6 +15,9 @@ export const getValidationSchema = (): Joi.ObjectSchema => {
       then: Joi.string().required(),
       otherwise: Joi.string().default('http://localhost:3000')
     }),
+    IP_LOG_LEVEL: Joi.string()
+      .valid('enabled', 'disabled', 'anonymized')
+      .default('anonymized'),
     // DB credentials
     DB_DRIVER: Joi.string()
       .default('sqlite')

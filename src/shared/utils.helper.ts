@@ -11,3 +11,20 @@ export const isEmptyObject = (objectName: object): boolean => {
     objectName.constructor === Object
   )
 }
+
+export const anonymizeIp = (ip: string): string => {
+  if (!ip) return 'unknown'
+
+  if (ip.includes('.') && !ip.includes(':')) {
+    const parts = ip.split('.')
+    if (parts.length === 4) {
+      return `${parts[0]}.${parts[1]}.x.x`
+    }
+  }
+
+  if (ip.includes(':')) {
+    return ip.substring(0, 20) + '...'
+  }
+
+  return 'unknown'
+}

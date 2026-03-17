@@ -4,5 +4,6 @@ export const apiConfig = registerAs('api', () => ({
   environment: process.env.NODE_ENV,
   port: process.env.API_PORT ? parseInt(process.env.API_PORT) : undefined,
   allowedOrigins: process.env.ALLOWED_ORIGINS?.split(','),
-  secretKey: process.env.API_SECRET_KEY
+  secretKey: process.env.API_SECRET_KEY,
+  ipLogLevel: process.env.IP_LOG_LEVEL || 'anonymized'
 }))
