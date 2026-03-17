@@ -6,6 +6,9 @@
     "builder": "swc",
     "typeCheck": true,
     "deleteOutDir": true,
+    "watchOptions": {
+      "excludeFiles": ["src/metadata.ts"]
+    },
     "plugins": [
       {
         "name": "@nestjs/swagger",
