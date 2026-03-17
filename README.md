@@ -6,7 +6,7 @@
     <p align="center">
 <a href="https://nodejs.org" target="_blank"><img src="https://img.shields.io/badge/node-%3E%3D22.0.0-green.svg" alt="Node.js version" /></a>
 <a href="https://pnpm.io" target="_blank"><img src="https://img.shields.io/badge/pnpm-%3E%3D10.0.0-cc00ff.svg" alt="pnpm version" /></a>
-<a href="./LICENSE" target="_blank"><img src="https://img.shields.io/github/license/igorer88/nestjs-base-template" alt="Package License" /></a>
+<a href="./LICENSE" target="_blank"><img src="https://img.shields.io/github/license/igorer88/nestjs-paw-template" alt="Package License" /></a>
 </p>
 
 ## Description
