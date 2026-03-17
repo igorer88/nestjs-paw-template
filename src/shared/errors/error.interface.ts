@@ -2,7 +2,7 @@ export interface FormattedError {
   message: string
   exception: unknown
   errorCode: string
-  details: string
+  details: string | string[]
   context?: Record<string, unknown>
   status?: number
   stack?: string
@@ -13,6 +13,6 @@ export interface ErrorResponse {
   path: string
   statusCode: number
   message: string
-  details: string
+  details: string | string[]
   timestamp: string
 }
