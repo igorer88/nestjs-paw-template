@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 
-import { apiConfig, cacheConfig, dbConfig, getValidationSchema } from './config'
+import { apiConfig, cacheConfig, dbConfig, getValidationSchema, throttlerConfig } from './config'
 import { AppCacheModule } from './config/cache'
+import { AppRateLimitingModule } from './config/rate-limiting'
 import { DatabaseModule } from './database/database.module'
 import { SharedModule } from './shared/shared.module'
 
@@ -10,11 +11,12 @@ import { SharedModule } from './shared/shared.module'
   imports: [
     ConfigModule.forRoot({
       validationSchema: getValidationSchema(),
-      load: [apiConfig, cacheConfig, dbConfig],
+      load: [apiConfig, cacheConfig, dbConfig, throttlerConfig],
       isGlobal: true,
       cache: true
     }),
     AppCacheModule,
+    AppRateLimitingModule,
     SharedModule,
     DatabaseModule
   ]
