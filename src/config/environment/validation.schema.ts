@@ -9,7 +9,12 @@ export const getValidationSchema = (): Joi.ObjectSchema => {
       .default(Environment.Development)
       .valid(Environment.Development, Environment.Production),
     API_PORT: Joi.number().integer().min(1).max(65535).default(3000).required(),
-    API_SECRET_KEY: Joi.string().required(),
+    API_SECRET_KEY: Joi.string().required().min(32),
+    ALLOWED_ORIGINS: Joi.string().when('NODE_ENV', {
+      is: Environment.Production,
+      then: Joi.string().required(),
+      otherwise: Joi.string().default('http://localhost:3000')
+    }),
     // DB credentials
     DB_DRIVER: Joi.string()
       .default('sqlite')
@@ -49,11 +54,11 @@ export const getValidationSchema = (): Joi.ObjectSchema => {
       otherwise: Joi.optional()
     }),
     // Cache configuration
-    CACHE_DRIVER: Joi.string()
-      .default('memory')
-      .valid('memory', 'redis'),
+    CACHE_DRIVER: Joi.string().default('memory').valid('memory', 'redis'),
     CACHE_TTL: Joi.number().integer().min(0).default(60000),
     CACHE_MAX_SIZE: Joi.number().integer().min(1).default(5000),
-    REDIS_URL: Joi.string().uri({ scheme: 'redis' }).default('redis://localhost:6379')
+    REDIS_URL: Joi.string()
+      .uri({ scheme: 'redis' })
+      .default('redis://localhost:6379')
   }).unknown(true)
 }

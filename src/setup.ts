@@ -2,11 +2,14 @@ import { readFileSync } from 'fs'
 
 import {
   INestApplication,
+  RequestMethod,
   ValidationPipe,
   VersioningType
 } from '@nestjs/common'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import helmet from 'helmet'
+
+import { Environment } from './config'
 
 export const getAppMetadata = (
   packageFile = 'package.json'
@@ -26,7 +29,10 @@ export const getAppMetadata = (
   }
 }
 
-export function setup(app: INestApplication): INestApplication {
+export function setup(
+  app: INestApplication,
+  environment: Environment
+): INestApplication {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -38,16 +44,26 @@ export function setup(app: INestApplication): INestApplication {
     })
   )
 
-  // app.setGlobalPrefix('api', {
-  //   exclude: [{ path: 'health', method: RequestMethod.GET }]
-  // })
+  app.setGlobalPrefix('api', {
+    exclude: [
+      { path: 'health', method: RequestMethod.GET },
+      { path: 'health/db', method: RequestMethod.GET }
+    ]
+  })
 
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: '1'
   })
 
-  app.use(helmet())
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+      crossOriginEmbedderPolicy: false,
+      xContentTypeOptions: true,
+      referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
+    })
+  )
 
   const appMetadata = getAppMetadata()
   const config = new DocumentBuilder()
@@ -56,7 +72,8 @@ export function setup(app: INestApplication): INestApplication {
     .setVersion(appMetadata.version)
     .build()
   const document = SwaggerModule.createDocument(app, config)
-  SwaggerModule.setup('docs', app, document)
-
+  if (environment === Environment.Development) {
+    SwaggerModule.setup('docs', app, document)
+  }
   return app
 }
