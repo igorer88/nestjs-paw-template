@@ -2,20 +2,30 @@ import { Logger } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 
 import { AppModule } from './app.module'
-import { logLevel } from './config'
+import { Environment, logLevel } from './config'
 import { setup } from './setup'
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
-    cors: true,
     logger: logLevel
   })
+
+  app.getHttpAdapter().getInstance().set('trust proxy', 1)
+
+  const environment = AppModule.environment as Environment
+  const port = AppModule.port as number
+
+  app.enableCors({
+    origin: AppModule.allowedOrigins,
+    credentials: true
+  })
+
   const logger = new Logger('Bootstrap')
 
-  setup(app)
+  setup(app, environment)
 
-  await app.listen(AppModule.port)
-  logger.log(`Server running in: '${AppModule.environment}' environment`)
-  logger.log(`Server started on port: ${AppModule.port}`)
+  await app.listen(port)
+  logger.log(`Server running in: '${environment}' environment`)
+  logger.log(`Server started on port: ${port}`)
 }
 bootstrap()
