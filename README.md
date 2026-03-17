@@ -4,15 +4,27 @@
 
   <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
     <p align="center">
-<a href="https://nodejs.org" target="_blank"><img src="https://img.shields.io/badge/node-%3E%3D22.0.0-green.svg" alt="Node.js version" /></a>
-<a href="https://pnpm.io" target="_blank"><img src="https://img.shields.io/badge/pnpm-%3E%3D10.0.0-cc00ff.svg" alt="pnpm version" /></a>
+<a href="https://nodejs.org" target="_blank"><img src="https://img.shields.io/badge/node-%3E%3D24.x-green.svg" alt="Node.js version" /></a>
+<a href="https://pnpm.io" target="_blank"><img src="https://img.shields.io/badge/pnpm-%3E%3D10.x-cc00ff.svg" alt="pnpm version" /></a>
 <a href="./LICENSE" target="_blank"><img src="https://img.shields.io/github/license/igorer88/nestjs-paw-template" alt="Package License" /></a>
+<a href="https://david-dm.org/igorer88/nestjs-paw-template" target="_blank"><img src="https://img.shields.io/david/igorer88/nestjs-paw-template.svg" alt="Dependencies" /></a>
 </p>
 
 ## Description
 
-Base [Nest](https://github.com/nestjs/nest) framework template for creating efficient and scalable server-side applications.
-This template is configured to use pnpm as the package manager and SWC as the compiler.
+A production-ready [NestJS](https://github.com/nestjs/nest) base template for building scalable server-side applications. Pre-configured with TypeORM (PostgreSQL/SQLite), SWC compiler, Swagger documentation, E2E tests, security (Helmet, rate limiting), and centralized error handling. Uses pnpm as the package manager.
+
+## Features
+
+- **Database**: TypeORM with PostgreSQL and SQLite support
+- **Build**: SWC compiler for fast compilation
+- **API Docs**: Swagger/OpenAPI at `/docs`
+- **Security**: Helmet for HTTP headers, rate limiting
+- **Caching**: Built-in caching support
+- **Testing**: Jest with unit and E2E tests
+- **Error Handling**: Centralized error handling with custom exceptions
+- **Validation**: class-validator and Joi for DTO validation
+- **Versioning**: URI-based API versioning
 
 ## Project setup
 
