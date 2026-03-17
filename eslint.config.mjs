@@ -5,7 +5,7 @@ import typescriptEslintEslintPlugin from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
 import { fixupPluginRules } from '@eslint/compat'
 import globals from 'globals'
-import importPlugin from 'eslint-plugin-import'
+import importPlugin from 'eslint-plugin-import-x'
 import nodePlugin from 'eslint-plugin-node'
 
 import {
@@ -33,7 +33,7 @@ const customTypescriptConfig = {
   files: tsFiles,
   plugins: {
     '@typescript-eslint': typescriptEslintEslintPlugin,
-    import: importPlugin,
+    'import-x': importPlugin,
     node: fixupPluginRules(nodePlugin)
   },
   languageOptions: {
@@ -45,7 +45,7 @@ const customTypescriptConfig = {
     }
   },
   settings: {
-    'import/resolver': {
+    'import-x/resolver': {
       typescript: {
         alwaysTryTypes: true,
         project: path.resolve(__dirname, 'tsconfig.json')
@@ -55,7 +55,7 @@ const customTypescriptConfig = {
         extensions: ['.js', '.ts', '.d.ts']
       }
     },
-    'import/parsers': {
+    'import-x/parsers': {
       '@typescript-eslint/parser': ['.ts', '.d.ts']
     }
   },

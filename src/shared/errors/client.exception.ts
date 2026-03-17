@@ -15,12 +15,12 @@ export class ClientException extends HttpException implements BaseError {
   public readonly stack: string
   public readonly exception: unknown
   public readonly context: Record<string, unknown>
-  public readonly details?: string
+  public readonly details?: string | string[]
   public readonly extra?: Record<string, unknown>
 
   constructor(
     message: string,
-    details: string,
+    details: string | string[],
     statusCode: HttpStatus,
     errorCode: string,
     context: Record<string, unknown>,

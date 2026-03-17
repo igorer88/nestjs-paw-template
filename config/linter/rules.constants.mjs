@@ -55,7 +55,7 @@ const eslintBaseRules = {
  *    }
  */
 const eslintImportOrderRules = {
-  'import/order': [
+  'import-x/order': [
     'error',
     {
       groups: [

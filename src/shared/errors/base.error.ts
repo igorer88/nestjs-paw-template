@@ -12,7 +12,7 @@ export abstract class BaseError extends Error {
     public readonly errorCode: string,
     public readonly exception: unknown,
     public readonly stack: string,
-    public readonly details?: string,
+    public readonly details?: string | string[],
     public readonly extra?: Record<string, unknown>
   ) {
     super(message)
