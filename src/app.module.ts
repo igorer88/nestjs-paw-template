@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 
-import { apiConfig, dbConfig, getValidationSchema } from './config'
+import { apiConfig, cacheConfig, dbConfig, getValidationSchema } from './config'
+import { AppCacheModule } from './config/cache'
 import { DatabaseModule } from './database/database.module'
 import { SharedModule } from './shared/shared.module'
 
@@ -9,10 +10,11 @@ import { SharedModule } from './shared/shared.module'
   imports: [
     ConfigModule.forRoot({
       validationSchema: getValidationSchema(),
-      load: [apiConfig, dbConfig],
+      load: [apiConfig, cacheConfig, dbConfig],
       isGlobal: true,
       cache: true
     }),
+    AppCacheModule,
     SharedModule,
     DatabaseModule
   ]

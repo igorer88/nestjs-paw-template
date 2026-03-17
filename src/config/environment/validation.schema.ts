@@ -47,6 +47,13 @@ export const getValidationSchema = (): Joi.ObjectSchema => {
       is: Joi.string().valid('postgres', 'mysql', 'mssql'),
       then: Joi.string().required(),
       otherwise: Joi.optional()
-    })
+    }),
+    // Cache configuration
+    CACHE_DRIVER: Joi.string()
+      .default('memory')
+      .valid('memory', 'redis'),
+    CACHE_TTL: Joi.number().integer().min(0).default(60000),
+    CACHE_MAX_SIZE: Joi.number().integer().min(1).default(5000),
+    REDIS_URL: Joi.string().uri({ scheme: 'redis' }).default('redis://localhost:6379')
   }).unknown(true)
 }
