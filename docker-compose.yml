@@ -8,8 +8,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        NODE_VERSION: 23-alpine
-        PNPM_REGISTRY: 'https://registry.npmjs.org/'
+        NODE_VERSION: 24-alpine
+        PNPM_REGISTRY: "https://registry.npmjs.org/"
       target: ${BUILD_STAGE}
     env_file:
       - .env
@@ -33,7 +33,7 @@ services:
     ports:
       - ${POSTGRES_PORT:-5432}:5432
     healthcheck:
-      test: 'pg_isready --username=${DB_USER} --dbname=${DB_NAME} && psql --username=${DB_USER} --dbname=${DB_NAME} --list'
+      test: "pg_isready --username=${DB_USER} --dbname=${DB_NAME} && psql --username=${DB_USER} --dbname=${DB_NAME} --list"
       interval: 5s
       timeout: 10s
       retries: 10
@@ -42,19 +42,6 @@ services:
       - ./config/db/pg_dataset:/docker-entrypoint-initdb.d
     networks:
       - net
-
-  # pgadmin:
-  #   image: dpage/pgadmin4:latest
-  #   container_name: pgadmin
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-  #     PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-  #   ports:
-  #     - '${PGADMIN_PORT:-5050}:80'
-  #   depends_on:
-  #     - database
-  #   networks:
-  #     - net
 
 volumes:
   db:
