@@ -10,5 +10,10 @@ export enum Environment {
   /**
    * Production environment.
    */
-  Production = 'production'
+  Production = 'production',
+
+  /**
+   * Test environment.
+   */
+  Test = 'test'
 }

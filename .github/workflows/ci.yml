@@ -54,6 +54,8 @@ jobs:
         run: pnpm test:cov
         env:
           NODE_ENV: test
+          API_PORT: 3000
+          API_SECRET_KEY: test-secret-key-for-e2e-tests-minimum
           DB_DRIVER: sqlite
           DB_SQLITE_PATH: config/db/db.sqlite3
 
@@ -109,5 +111,7 @@ jobs:
         run: pnpm test:e2e
         env:
           NODE_ENV: test
+          API_PORT: 3000
+          API_SECRET_KEY: test-secret-key-for-e2e-tests-minimum
           DB_DRIVER: sqlite
           DB_SQLITE_PATH: config/db/db.sqlite3

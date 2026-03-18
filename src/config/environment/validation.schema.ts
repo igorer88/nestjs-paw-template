@@ -7,7 +7,7 @@ export const getValidationSchema = (): Joi.ObjectSchema => {
   return Joi.object({
     NODE_ENV: Joi.string()
       .default(Environment.Development)
-      .valid(Environment.Development, Environment.Production),
+      .valid(Environment.Development, Environment.Production, Environment.Test),
     API_PORT: Joi.number().integer().min(1).max(65535).default(3000).required(),
     API_SECRET_KEY: Joi.string().required().min(32),
     ALLOWED_ORIGINS: Joi.string().when('NODE_ENV', {
