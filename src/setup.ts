@@ -58,8 +58,8 @@ export function setup(
 
   app.use(
     helmet({
-      contentSecurityPolicy: false,
-      crossOriginEmbedderPolicy: false,
+      contentSecurityPolicy: environment === Environment.Production,
+      crossOriginEmbedderPolicy: environment === Environment.Production,
       xContentTypeOptions: true,
       referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
     })
