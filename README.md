@@ -74,9 +74,26 @@ DB_PASSWORD=your-password
 
 ### Run Migrations
 
+Migrations are handled via TypeORM CLI.
+
 ```bash
-$ pnpm run migration:run
+# Generate migration (after creating/modifying entities)
+$ pnpm migration:generate src/database/migrations/MigrationName
+
+# Run pending migrations
+$ pnpm migration:run
+
+# Revert last migration (if needed)
+$ pnpm migration:revert
 ```
+
+> **Important**: Ensure `config/db/` folder exists for SQLite before running migrations.
+
+### First Run
+
+On a fresh database, run `pnpm migration:run` - it will create the `_migrations` table and run any pending migrations.
+
+> **Note**: You must have entities defined in `src/` (any subdirectory) before generating migrations. TypeORM automatically finds files matching `*.entity.ts` pattern.
 
 ## Docker
 
