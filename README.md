@@ -93,7 +93,7 @@ $ pnpm migration:revert
 
 On a fresh database, run `pnpm migration:run` - it will create the `_migrations` table and run any pending migrations.
 
-> **Note**: You must have entities defined in `src/database/entities/` before generating migrations. TypeORM compares current schema to entity definitions.
+> **Note**: You must have entities defined in `src/` (any subdirectory) before generating migrations. TypeORM automatically finds files matching `*.entity.ts` pattern.
 
 ## Docker
 
