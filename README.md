@@ -26,6 +26,16 @@ A production-ready [NestJS](https://github.com/nestjs/nest) base template for bu
 - **Validation**: class-validator and Joi for DTO validation
 - **Versioning**: URI-based API versioning
 
+## Security
+
+### Known Vulnerabilities
+
+| CVE            | Package                      | Severity | Status             |
+| -------------- | ---------------------------- | -------- | ------------------ |
+| CVE-2025-69873 | ajv@8.17.1 (via @nestjs/cli) | Moderate | No patch available |
+
+> **Note**: This vulnerability is in `ajv@8.17.1`, a transitive dependency of `@nestjs/cli` (used only in development). It does not affect production deployments. The fix requires updating `fork-ts-checker-webpack-plugin` or waiting for NestJS to update their dependencies. Overriding ajv to version 8.18.0 conflicts with eslint@10 which requires ajv@6.x. For more details, see [CVE-2025-69873](https://github.com/ajv-validator/ajv/issues/2581).
+
 ## Project setup
 
 ```bash
