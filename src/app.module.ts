@@ -1,8 +1,16 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 
-import { apiConfig, cacheConfig, dbConfig, Environment, getValidationSchema, throttlerConfig } from './config'
+import {
+  apiConfig,
+  cacheConfig,
+  dbConfig,
+  Environment,
+  getValidationSchema,
+  throttlerConfig
+} from './config'
 import { AppCacheModule } from './config/cache'
+import { HealthCheckModule } from './config/health-check'
 import { AppRateLimitingModule } from './config/rate-limiting'
 import { DatabaseModule } from './database/database.module'
 import { SharedModule } from './shared/shared.module'
@@ -18,6 +26,7 @@ import { SharedModule } from './shared/shared.module'
     AppCacheModule,
     AppRateLimitingModule,
     SharedModule,
+    HealthCheckModule,
     DatabaseModule
   ]
 })
