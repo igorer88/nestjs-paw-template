@@ -37,9 +37,9 @@
   },
   "lint-staged": {
     "*.ts": [
-      "eslint --fix",
-      "prettier --write",
-      "jest --passWithNoTests"
+      "pnpm lint",
+      "pnpm format",
+      "pnpm test -- --passWithNoTests"
     ]
   },
   "dependencies": {
