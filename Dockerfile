@@ -74,7 +74,7 @@ ENV NODE_ENV=production
 COPY --chown=${SYSTEM_USER}:${SYSTEM_USER} . .
 
 # Install production dependencies from cache and build the project
-RUN pnpm install --frozen-lockfile --offline --no-frozen-lockfile && pnpm build
+RUN pnpm install --frozen-lockfile --offline --no-frozen-lockfile --ignore-scripts && pnpm build
 
 # Use system user
 USER ${SYSTEM_USER}
@@ -92,7 +92,7 @@ COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 
 # Prune development dependencies to reduce image size
-RUN pnpm prune --prod
+RUN pnpm prune --prod --ignore-scripts
 
 # Set ENTRYPOINT and CMD for production environment
 ENTRYPOINT ["pnpm", "run"]
