@@ -92,7 +92,7 @@ COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 
 # Prune development dependencies to reduce image size
-RUN pnpm prune --prod
+RUN pnpm prune --prod --ignore-scripts
 
 # Set ENTRYPOINT and CMD for production environment
 ENTRYPOINT ["pnpm", "run"]
