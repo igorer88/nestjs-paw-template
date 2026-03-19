@@ -8,7 +8,6 @@
 <a href="https://nodejs.org" target="_blank"><img src="https://img.shields.io/badge/node-%3E%3D24.x-green.svg" alt="Node.js version" /></a>
 <a href="https://pnpm.io" target="_blank"><img src="https://img.shields.io/badge/pnpm-%3E%3D10.x-cc00ff.svg" alt="pnpm version" /></a>
 <a href="./LICENSE" target="_blank"><img src="https://img.shields.io/github/license/igorer88/nestjs-paw-template" alt="Package License" /></a>
-<a href="https://david-dm.org/igorer88/nestjs-paw-template" target="_blank"><img src="https://img.shields.io/david/igorer88/nestjs-paw-template.svg" alt="Dependencies" /></a>
 </p>
 
 ## Description
