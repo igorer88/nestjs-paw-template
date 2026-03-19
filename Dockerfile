@@ -74,7 +74,7 @@ ENV NODE_ENV=production
 COPY --chown=${SYSTEM_USER}:${SYSTEM_USER} . .
 
 # Install production dependencies from cache and build the project
-RUN pnpm install --frozen-lockfile --offline --no-frozen-lockfile && pnpm build
+RUN pnpm install --frozen-lockfile --offline --no-frozen-lockfile --ignore-scripts && pnpm build
 
 # Use system user
 USER ${SYSTEM_USER}
