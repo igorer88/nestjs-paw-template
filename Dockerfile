@@ -9,6 +9,9 @@ ARG PNPM_REGISTRY=https://registry.npmjs.org/
 # Base stage with platform specification and Node.js version argument
 FROM --platform=$TARGETPLATFORM node:${NODE_VERSION} AS base
 
+# Upgrade zlib to fix CVE-2026-22184 and CVE-2026-27171
+RUN apk upgrade --no-cache zlib
+
 # Set environment variables
 ENV API_PORT=3000 \
   SYSTEM_USER=system \
