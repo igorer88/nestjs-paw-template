@@ -9,7 +9,7 @@ services:
       dockerfile: Dockerfile
       args:
         NODE_VERSION: 24-alpine
-        PNPM_REGISTRY: "https://registry.npmjs.org/"
+        PNPM_REGISTRY: 'https://registry.npmjs.org/'
       target: ${BUILD_STAGE}
     env_file:
       - .env
@@ -33,7 +33,7 @@ services:
     ports:
       - ${POSTGRES_PORT:-5432}:5432
     healthcheck:
-      test: "pg_isready --username=${DB_USER} --dbname=${DB_NAME} && psql --username=${DB_USER} --dbname=${DB_NAME} --list"
+      test: 'pg_isready --username=${DB_USER} --dbname=${DB_NAME} && psql --username=${DB_USER} --dbname=${DB_NAME} --list'
       interval: 5s
       timeout: 10s
       retries: 10

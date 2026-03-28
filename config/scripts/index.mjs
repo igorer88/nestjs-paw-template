@@ -34,10 +34,7 @@ const main = async () => {
     }
 
     const serviceName = await askQuestion('Enter Docker service name', 'api')
-    const dockerImageVersion = await askQuestion(
-      'Enter Docker image version',
-      'latest'
-    )
+    const dockerImageVersion = await askQuestion('Enter Docker image version', 'latest')
 
     const shouldInstallDependencies = await askYesNoQuestion(
       'Do you want to install dependencies now?'

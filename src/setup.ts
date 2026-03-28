@@ -1,11 +1,6 @@
 import { readFileSync } from 'fs'
 
-import {
-  INestApplication,
-  RequestMethod,
-  ValidationPipe,
-  VersioningType
-} from '@nestjs/common'
+import { INestApplication, RequestMethod, ValidationPipe, VersioningType } from '@nestjs/common'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import helmet from 'helmet'
 
@@ -21,18 +16,11 @@ export const getAppMetadata = (
   private: boolean
   license: string
 } => {
-  try {
-    const data = readFileSync(packageFile, 'utf-8')
-    return JSON.parse(data)
-  } catch (error) {
-    throw error
-  }
+  const data = readFileSync(packageFile, 'utf-8')
+  return JSON.parse(data)
 }
 
-export function setup(
-  app: INestApplication,
-  environment: Environment
-): INestApplication {
+export function setup(app: INestApplication, environment: Environment): INestApplication {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
