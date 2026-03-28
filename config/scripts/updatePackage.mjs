@@ -11,12 +11,7 @@ import yaml from 'yaml'
  * @param {string} params.version - The project version.
  * @param {string} params.author - The project author.
  */
-export const updatePackageJson = async ({
-  name,
-  description,
-  version,
-  author
-}) => {
+export const updatePackageJson = async ({ name, description, version, author }) => {
   try {
     const packageJsonPath = './package.json'
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
@@ -24,10 +19,7 @@ export const updatePackageJson = async ({
     packageJson.description = description || packageJson.description
     packageJson.version = version || packageJson.version
     packageJson.author = author || packageJson.author
-    fs.writeFileSync(
-      packageJsonPath,
-      JSON.stringify(packageJson, null, 2) + '\n'
-    )
+    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n')
     console.log('Updated package.json successfully!\n')
   } catch (error) {
     console.error(`Error updating package.json: ${error.message}`)

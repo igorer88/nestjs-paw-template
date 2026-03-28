@@ -42,13 +42,13 @@ export const askYesNoQuestion = query =>
  */
 export const getGitAuthor = () =>
   new Promise((resolve, reject) => {
-    exec('git config --get user.name', (error, stdout, stderr) => {
+    exec('git config --get user.name', (error, stdout, _stderr) => {
       if (error) {
         reject(error)
         return
       }
       const name = stdout.trim()
-      exec('git config --get user.email', (error, stdout, stderr) => {
+      exec('git config --get user.email', (error, stdout, _stderr) => {
         if (error) {
           reject(error)
           return

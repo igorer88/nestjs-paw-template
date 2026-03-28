@@ -18,15 +18,7 @@ export class InternalException extends BaseError {
     details?: string,
     extra?: Record<string, unknown>
   ) {
-    super(
-      message,
-      ErrorTypes.INTERNAL_ERROR,
-      errorCode,
-      exception,
-      stack,
-      details,
-      extra
-    )
+    super(message, ErrorTypes.INTERNAL_ERROR, errorCode, exception, stack, details, extra)
     this.context = context
   }
 

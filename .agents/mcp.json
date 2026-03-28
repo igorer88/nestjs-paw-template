@@ -2,9 +2,7 @@
   "mcpServers": {
     "nestjs": {
       "command": "node",
-      "args": [
-        "./node_modules/NestJsMcp/dist/index.js"
-      ]
+      "args": ["./node_modules/NestJsMcp/dist/index.js"]
     }
   }
 }

@@ -135,12 +135,12 @@ pnpm test:e2e -- path/to/test.e2e.spec.ts
 ### Naming Conventions
 
 - **Classes/Interfaces**: PascalCase (e.g., `UserService`, `AuthController`)
-- **Interfaces**: PascalCase without `I` prefix (e.g., `User`, NOT `IUser`)
+- **Interfaces**: PascalCase without `I` prefix (e.g., `User`, NOT `IUser`) - This convention is no longer enforced by linter but should still be followed manually
 - **Methods/Variables**: camelCase
 - **Files**: kebab-case (e.g., `user-service.ts`, `auth.controller.ts`)
 - **Constants**: SCREAMING_SNAKE_CASE
 
-### Import Order (Enforced by ESLint)
+### Import Order (Enforced by oxlint)
 
 Imports must be sorted in this exact order:
 
