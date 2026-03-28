@@ -20,9 +20,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
   private getLoggableIp(ip: string | undefined): string | undefined {
     if (!ip) return undefined
 
-    const logLevel = this.configService.get<string>(
-      'api.ipLogLevel'
-    ) as IpLogLevel
+    const logLevel = this.configService.get<string>('api.ipLogLevel') as IpLogLevel
 
     switch (logLevel) {
       case 'disabled':
@@ -55,9 +53,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       path: request.url,
       statusCode: clientException.getStatus(),
       message: clientException.message || 'Internal server error',
-      details: showDetails
-        ? clientException.details || ''
-        : 'An error occurred',
+      details: showDetails ? clientException.details || '' : 'An error occurred',
       timestamp: new Date().toISOString()
     }
 

@@ -8,11 +8,8 @@ export const databaseProviders: DynamicModule[] = [
   TypeOrmModule.forRootAsync({
     imports: [ConfigModule],
     inject: [ConfigService],
-    useFactory: async (
-      configService: ConfigService
-    ): Promise<TypeOrmModuleOptions> => {
-      const isProduction =
-        configService.get<string>('api.environment') === Environment.Production
+    useFactory: async (configService: ConfigService): Promise<TypeOrmModuleOptions> => {
+      const isProduction = configService.get<string>('api.environment') === Environment.Production
 
       const driver = configService.get<string>('db.driver')
 

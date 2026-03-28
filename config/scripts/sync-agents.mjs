@@ -55,9 +55,7 @@ function convertMcpConfig(mcpConfig) {
   }
 
   const converted = {}
-  for (const [serverName, serverConfig] of Object.entries(
-    mcpConfig.mcpServers
-  )) {
+  for (const [serverName, serverConfig] of Object.entries(mcpConfig.mcpServers)) {
     converted[serverName] = {
       type: 'local',
       command: [serverConfig.command, ...(serverConfig.args || [])]
@@ -75,9 +73,7 @@ function generateOpencodeJson(configJson) {
 
   // Convert commands to OpenCode command format
   if (configJson.commands) {
-    for (const [commandName, commandConfig] of Object.entries(
-      configJson.commands
-    )) {
+    for (const [commandName, commandConfig] of Object.entries(configJson.commands)) {
       commands[commandName] = {
         description: commandConfig.description || '',
         template: `Read the command definition at ${commandConfig.definition} and execute the instructions.`
@@ -153,11 +149,7 @@ function generateCommandsForTool(toolKey, commandsConfig) {
       continue
     }
 
-    const generatedContent = generateCommandMarkdown(
-      sourcePath,
-      toolKey,
-      commandConfig
-    )
+    const generatedContent = generateCommandMarkdown(sourcePath, toolKey, commandConfig)
 
     fs.writeFileSync(targetPath, generatedContent)
     console.log(`  Generated: .opencode/commands/${commandName}.md`)
@@ -232,9 +224,7 @@ async function getValidToolSelection(rl) {
   while (true) {
     const input = await promptQuestion(
       rl,
-      '\nAvailable AI tools:\n' +
-        optionsText +
-        '\n\nWhich AI tool do you want to use? '
+      '\nAvailable AI tools:\n' + optionsText + '\n\nWhich AI tool do you want to use? '
     )
 
     const validation = validateToolInput(input, availableTools)
@@ -249,10 +239,7 @@ async function getValidToolSelection(rl) {
 
 async function askForNestJsMcp(rl) {
   while (true) {
-    const input = await promptQuestion(
-      rl,
-      '\nDo you want to configure NestJsMcp? (y/n): '
-    )
+    const input = await promptQuestion(rl, '\nDo you want to configure NestJsMcp? (y/n): ')
 
     const validation = validateYesNo(input)
 
@@ -274,9 +261,7 @@ async function getNestJsMcpPath(rl) {
     const trimmed = input.trim()
 
     if (!trimmed) {
-      console.log(
-        '\nError: Path cannot be empty. Please enter the path to NestJsMcp.\n'
-      )
+      console.log('\nError: Path cannot be empty. Please enter the path to NestJsMcp.\n')
       continue
     }
 
@@ -347,15 +332,11 @@ function createSymlinksForTool(toolKey) {
   // Generate command files with tool-specific frontmatter
   if (config.generateCommands) {
     const configPath = path.resolve(projectRoot, '.agents/config.json')
-    const commandsConfig = JSON.parse(
-      fs.readFileSync(configPath, 'utf-8')
-    ).commands
+    const commandsConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8')).commands
     generateCommandsForTool(toolKey, commandsConfig)
   }
 
-  console.log(
-    `\nSuccessfully created folders, files and symlinks for ${toolKey}`
-  )
+  console.log(`\nSuccessfully created folders, files and symlinks for ${toolKey}`)
 }
 
 function generateFile(source, target) {

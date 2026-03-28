@@ -12,8 +12,7 @@ const AppDataSource = new DataSource({
   type: envVars.DB_DRIVER,
   host: envVars.DB_DRIVER === 'sqlite' ? undefined : envVars.DB_HOST,
   port: envVars.DB_DRIVER === 'sqlite' ? undefined : parseInt(envVars.DB_PORT),
-  database:
-    envVars.DB_DRIVER === 'sqlite' ? envVars.DB_SQLITE_PATH : envVars.DB_NAME,
+  database: envVars.DB_DRIVER === 'sqlite' ? envVars.DB_SQLITE_PATH : envVars.DB_NAME,
   username: envVars.DB_DRIVER === 'sqlite' ? undefined : envVars.DB_USER,
   password: envVars.DB_DRIVER === 'sqlite' ? undefined : envVars.DB_PASSWORD,
   entities: [__dirname + '/**/**/*.entity{.ts,.js}'],
