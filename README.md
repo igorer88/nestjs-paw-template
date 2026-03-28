@@ -184,13 +184,9 @@ Exception → AllExceptionsFilter → ErrorService → ClientException → Respo
 Use `ClientException` for service-level errors:
 
 ```typescript
-throw new ClientException(
-  'Error message',
-  'Detailed info',
-  HttpStatus.BAD_REQUEST,
-  'ERROR_CODE',
-  { context: '...' }
-)
+throw new ClientException('Error message', 'Detailed info', HttpStatus.BAD_REQUEST, 'ERROR_CODE', {
+  context: '...'
+})
 ```
 
 ### Internal Errors (Experimental)

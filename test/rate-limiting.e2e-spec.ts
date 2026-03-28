@@ -25,9 +25,7 @@ describe('Rate Limiting (Integration)', () => {
 
   describe('ThrottlerGuard', () => {
     it('should allow requests within the limit', async () => {
-      const response = await request(app.getHttpServer())
-        .get('/v1/health')
-        .expect(200)
+      const response = await request(app.getHttpServer()).get('/v1/health').expect(200)
 
       expect(response.body).toHaveProperty('status')
     })
@@ -40,9 +38,7 @@ describe('Rate Limiting (Integration)', () => {
       }
 
       // Should still be ok within limit
-      const response = await request(app.getHttpServer())
-        .get('/v1/health')
-        .expect(200)
+      const response = await request(app.getHttpServer()).get('/v1/health').expect(200)
 
       expect(response.body).toHaveProperty('status')
     })

@@ -68,10 +68,5 @@
     "init-feature": "skills/init-feature/SKILL.md",
     "nestjs-crud": "skills/nestjs-crud/SKILL.md"
   },
-  "rules": [
-    "rules/dtos.md",
-    "rules/controllers.md",
-    "rules/modules.md",
-    "rules/services.md"
-  ]
+  "rules": ["rules/dtos.md", "rules/controllers.md", "rules/modules.md", "rules/services.md"]
 }

@@ -34,9 +34,7 @@ describe('Health Check (e2e)', () => {
     })
 
     it('should return health status with correct content type', () => {
-      return request(app.getHttpServer())
-        .get('/v1/health')
-        .expect('Content-Type', /json/)
+      return request(app.getHttpServer()).get('/v1/health').expect('Content-Type', /json/)
     })
   })
 
