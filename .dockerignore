@@ -26,3 +26,33 @@ build
 
 # Ignore config/db directory (optional, if you don't want them in the image)
 config/db
+
+# Ignore agent and tool configurations
+.agents
+.paw-tools
+.opencode
+
+# Ignore development tools
+.github
+.husky
+.vscode
+
+# Ignore configuration files
+.npmignore
+.oxfmtrc.json
+.oxlintrc.json
+commitlint.config.ts
+jest.config.mjs
+
+# Ignore environment files
+.env.example
+
+# Ignore documentation and metadata
+docs
+*.md
+LICENSE
+AGENTS.md
+
+# Ignore test outputs
+coverage
+test
