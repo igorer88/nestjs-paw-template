@@ -1,0 +1,112 @@
+name: Version Bump
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+    paths-ignore:
+      - '**.md'
+      - '**.json'
+      - '**.yml'
+      - '**.yaml'
+      - '!.github/workflows/version.yml'
+  push:
+    branches: [release/*]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump-version:
+    name: Bump Version
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Get current version
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "current_version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Determine bump type
+        id: bump_type
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            echo "type=patch" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          COMMITS=$(git log ${LAST_TAG}..HEAD --oneline)
+          
+          if echo "$COMMITS" | grep -qi "BREAKING CHANGE"; then
+            echo "type=major" >> $GITHUB_OUTPUT
+          elif echo "$COMMITS" | grep -qi "^feat:"; then
+            echo "type=minor" >> $GITHUB_OUTPUT
+          else
+            echo "type=patch" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run bump version script
+        run: node config/scripts/bump-version.mjs ${{ steps.bump_type.outputs.type }}
+
+      - name: Get new version
+        id: new_version
+        run: |
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "tag_name=v$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Commit version bump
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(release): bump version to v{{version}}"
+          version: ${{ steps.new_version.outputs.new_version }}
+          file_pattern: "package.json docker-compose.yml"
+
+      - name: Create git tag
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{ steps.new_version.outputs.tag_name }}',
+              sha: context.sha
+            })
+
+      - name: Comment on PR with version info
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.issue.number;
+            const newVersion = '${{ steps.new_version.outputs.new_version }}';
+            const tagName = '${{ steps.new_version.outputs.tag_name }}';
+            
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: `🚀 **Version bumped to ${tagName}**\n\nThe version has been updated to \`${newVersion}\`. This PR will create a git tag \`${tagName}\` when merged.`
+            });
