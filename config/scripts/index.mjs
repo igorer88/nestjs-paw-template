@@ -8,7 +8,7 @@ import {
   isPackageManagerInstalled,
   rl
 } from './utils.mjs'
-import { updatePackageJson, updateDockerCompose } from './updatePackage.mjs'
+import { updatePackageJson, updateDockerCompose } from './bump-version.mjs'
 
 /**
  * Main function to prompt the user for package details and update the package.json file and docker compose file.
