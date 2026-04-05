@@ -3,7 +3,7 @@ services:
     restart: unless-stopped
     container_name: api
     # image: ghcr.io/your-username/your-repo:your-tag  # Image from GitHub Container Registry
-    image: api:v0.1.1
+    image: api:v0.1.2
     build:
       context: .
       dockerfile: Dockerfile
