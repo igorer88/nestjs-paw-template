@@ -2,10 +2,24 @@ name: Version Bump
 
 on:
   push:
-    branches: [main]
+    branches:
+      - 'release/*'
+      - 'hotfix/*'
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: 'Version bump type'
+        required: false
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   bump-version:
@@ -13,41 +27,71 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - name: Get branch name
+        id: branch
+        run: |
+          BRANCH=${GITHUB_REF#refs/heads/}
+          echo "name=$BRANCH" >> $GITHUB_OUTPUT
+
+      - name: Check if branch matches auto-bump patterns
+        id: check_branch
+        run: |
+          BRANCH="${{ steps.branch.outputs.name }}"
+
+          if [[ "$BRANCH" == release/* ]] || [[ "$BRANCH" == hotfix/* ]]; then
+            echo "matches=true" >> $GITHUB_OUTPUT
+          else
+            echo "matches=false" >> $GITHUB_OUTPUT
+            echo "Branch $BRANCH is not a release or hotfix branch, skipping version bump"
+          fi
+
+      - name: Checkout code
+        if: steps.check_branch.outputs.matches == 'true' || github.event.inputs.bump_type != ''
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Setup pnpm
+        if: steps.check_branch.outputs.matches == 'true' || github.event.inputs.bump_type != ''
         uses: pnpm/action-setup@v5
         with:
           version: 10
 
       - name: Setup Node.js
+        if: steps.check_branch.outputs.matches == 'true' || github.event.inputs.bump_type != ''
         uses: actions/setup-node@v6
         with:
           node-version: '24'
           cache: 'pnpm'
 
       - name: Install dependencies
+        if: steps.check_branch.outputs.matches == 'true' || github.event.inputs.bump_type != ''
         run: pnpm install --frozen-lockfile
 
       - name: Get current version
         id: version
+        if: steps.check_branch.outputs.matches == 'true' || github.event.inputs.bump_type != ''
         run: |
           VERSION=$(node -p "require('./package.json').version")
           echo "current_version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Determine bump type
         id: bump_type
+        if: steps.check_branch.outputs.matches == 'true' || github.event.inputs.bump_type != ''
         run: |
+          if [ -n "${{ github.event.inputs.bump_type }}" ]; then
+            echo "type=${{ github.event.inputs.bump_type }}" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
           LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
           if [ -z "$LAST_TAG" ]; then
             echo "type=patch" >> $GITHUB_OUTPUT
             exit 0
           fi
-          
+
           COMMITS=$(git log ${LAST_TAG}..HEAD --oneline)
-          
+
           if echo "$COMMITS" | grep -qi "BREAKING CHANGE"; then
             echo "type=major" >> $GITHUB_OUTPUT
           elif echo "$COMMITS" | grep -qi "^feat:"; then
@@ -57,23 +101,27 @@ jobs:
           fi
 
       - name: Run bump version script
+        if: steps.check_branch.outputs.matches == 'true' || github.event.inputs.bump_type != ''
         run: node config/scripts/bump-version.mjs ${{ steps.bump_type.outputs.type }}
 
       - name: Get new version
         id: new_version
+        if: steps.check_branch.outputs.matches == 'true' || github.event.inputs.bump_type != ''
         run: |
           NEW_VERSION=$(node -p "require('./package.json').version")
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "tag_name=v$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: Commit version bump
+        if: steps.check_branch.outputs.matches == 'true' || github.event.inputs.bump_type != ''
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore(release): bump version to v{{version}}"
+          commit_message: 'chore(release): bump version to v{{version}}'
           version: ${{ steps.new_version.outputs.new_version }}
-          file_pattern: "package.json docker-compose.yml"
+          file_pattern: 'package.json docker-compose.yml'
 
-      - name: Create and push git tag
+      - name: Create git tag
+        if: steps.check_branch.outputs.matches == 'true' || github.event.inputs.bump_type != ''
         uses: actions/github-script@v7
         with:
           script: |
