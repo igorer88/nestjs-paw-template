@@ -1,4 +1,12 @@
 {
   "versioning_scheme": "semver",
-  "initial_version": "1.0.0"
+  "initial_version": "1.0.0",
+  "auto_bump_branches": ["release/*", "hotfix/*"],
+  "require_label": false,
+  "label_name": "version-bump",
+  "default_bump_type": "patch",
+  "files_to_update": ["package.json", "docker-compose.yml"],
+  "docker_image_tags": {
+    "docker-compose.yml": "services.app.image"
+  }
 }

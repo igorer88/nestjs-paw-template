@@ -276,6 +276,70 @@ $ pnpm run test:e2e
 $ pnpm run test:cov
 ```
 
+## Versioning & Releases
+
+This project uses automated version bumping for releases.
+
+### Release Workflow
+
+1. **Create a release branch**:
+
+   ```bash
+   git checkout -b release/1.0.0
+   ```
+
+2. **Push the branch and create a PR to main**:
+
+   ```bash
+   git push origin release/1.0.0
+   gh pr create --base main --head release/1.0.0 --title "Release v1.0.0"
+   ```
+
+3. **The version workflow automatically**:
+   - Detects the version bump type based on commits (major/minor/patch)
+   - Updates `package.json` and `docker-compose.yml` with the new version
+   - Creates a git tag (e.g., `v1.0.0`)
+
+4. **CI runs automatically** on the version-bumped commit
+
+5. **Merge the PR** when all checks pass
+
+### Supported Versioning Schemes
+
+| Scheme | Config                          | Example                 |
+| ------ | ------------------------------- | ----------------------- |
+| semver | `"versioning_scheme": "semver"` | 0.1.0 → 0.1.1           |
+| calver | `"versioning_scheme": "calver"` | 2026.04.03 → 2026.04.04 |
+| single | `"versioning_scheme": "single"` | 1 → 2                   |
+| custom | `"versioning_scheme": "custom"` | v20260404.1             |
+
+### Hotfixes
+
+For urgent fixes, use `hotfix/*` branches:
+
+```bash
+git checkout -b hotfix/1.0.1
+git push origin hotfix/1.0.1
+gh pr create --base main --head hotfix/1.0.1 --title "Hotfix v1.0.1"
+```
+
+### Configuration
+
+Version settings are in `.paw-tools/version-config.json`:
+
+```json
+{
+  "versioning_scheme": "semver",
+  "auto_bump_branches": ["release/*", "hotfix/*"],
+  "require_label": false,
+  "files_to_update": ["package.json", "docker-compose.yml"]
+}
+```
+
+### Manual Version Bump
+
+To manually trigger a version bump, use GitHub Actions workflow dispatch with `workflow_dispatch` event.
+
 ## License
 
 This project is [MIT licensed](./LICENSE).
