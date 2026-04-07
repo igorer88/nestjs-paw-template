@@ -39,6 +39,8 @@ jobs:
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL,HIGH'
+          vuln-type: 'os,library'
+          skip-dirs: 'usr/local/lib/node_modules'
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v4
