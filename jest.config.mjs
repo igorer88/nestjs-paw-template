@@ -9,6 +9,7 @@ export default {
   coverageDirectory: '../coverage',
   testEnvironment: 'node',
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/$1'
+    '^@/(.*)$': '<rootDir>/$1',
+    '^@mocks/(.*)$': '<rootDir>/../test/__mocks__/$1'
   }
 }

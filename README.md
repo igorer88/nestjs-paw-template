@@ -41,7 +41,7 @@ All known vulnerabilities are currently patched.
 ## Project setup
 
 ```bash
-$ pnpm install
+pnpm install
 ```
 
 ## Environment Setup
@@ -49,7 +49,7 @@ $ pnpm install
 Copy the example environment file and configure your variables:
 
 ```bash
-$ cp .env.example .env
+cp .env.example .env
 ```
 
 ### Generate API_SECRET_KEY
@@ -57,7 +57,7 @@ $ cp .env.example .env
 Generate a secure secret key for the application:
 
 ```bash
-$ pnpm run generate:secret
+pnpm run generate:secret
 ```
 
 Copy the generated key and set it as `API_SECRET_KEY` in your `.env` file.
@@ -144,7 +144,7 @@ This template includes a centralized error handling system for consistent API re
 
 ### Architecture
 
-```
+```text
 Exception → AllExceptionsFilter → ErrorService → ClientException → Response
                                     ↓
                               [External Monitoring Tools]
@@ -277,6 +277,26 @@ $ pnpm run test:e2e
 # test coverage
 $ pnpm run test:cov
 ```
+
+### Shared Test Mocks
+
+Shared mocks are located in `test/__mocks__/` and can be imported using the `@mocks/` path alias:
+
+```typescript
+// Example: Using shared DataSource mock
+import { mockDataSource } from '@mocks/typeorm/data-source'
+
+// Reset mock before each test
+beforeEach(() => {
+  mockDataSource.query.mockReset()
+})
+```
+
+Available shared mocks:
+
+| Mock | Path | Usage |
+|------|------|-------|
+| DataSource | `@mocks/typeorm/data-source` | TypeORM DataSource mocking |
 
 ## Versioning & Releases
 
